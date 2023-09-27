@@ -22,12 +22,14 @@ const createUser = (request, response) => {
     .then((user) => {
       response.status(201).send(user);
     })
-    .catch((e) => response.status(500).send(e.message));
+    .catch((e) => {
+      response.status(500).send(e.message);
+    });
 };
 
 const updateUser = (request, response) => {
   const { user_id } = request.params;
-  return User.findByIdAndUpdate(user_id, { ...response.body })
+  return User.findByIdAndUpdate(user_id, { ...request.body })
     .then((user) => {
       response.status(200).send(user);
     })
@@ -35,7 +37,7 @@ const updateUser = (request, response) => {
 };
 
 const deleteUser = (request, response) => {
-  const { user_id } = response.params;
+  const { user_id } = request.params;
   return User.findByIdAndDelete(user_id)
     .then((user) => {
       response.status(200).send("Success");

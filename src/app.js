@@ -1,4 +1,5 @@
 const express = require("express");
+
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -7,13 +8,23 @@ const userRouter = require("./routes/users");
 const bookRouter = require("./routes/books");
 const loggerOne = require("./middlewares/loggerOne");
 
+const app = express();
 dotenv.config();
 
-const { PORT, API_URL, MONGO_DB } = process.env;
+const {
+  PORT = 3005,
+  API_URL = "http://127.0.0.1",
+  MONGO_DB = "mongodb://127.0.0.1:27017/backend",
+} = process.env;
 
-mongoose.connect(MONGO_DB).catch((error) => console.log(error));
-
-const app = express();
+mongoose
+  .connect(MONGO_DB)
+  .then(() => {
+    console.log("Подключено к MongoDB");
+  })
+  .catch((error) => {
+    console.error("Ошибка при подключении к MongoDB:", error);
+  });
 
 const helloWorld = (request, response) => {
   response.status(200);
